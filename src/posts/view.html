@@ -1,0 +1,12 @@
+<template>
+  <require from="../resources/elements/post-view"></require>
+
+	<div class="alert alert-danger" role="alert" if.bind="error">
+	  ${ error }
+	</div>
+
+  <post-view post.bind="post"></post-view>
+
+  <a route-href="route: post-edit; params.bind: { slug: post.slug }" class="btn btn-primary" if.bind="currentUser === post.author">Edit Post</a>
+
+</template>

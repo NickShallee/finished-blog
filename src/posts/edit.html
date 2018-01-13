@@ -1,0 +1,8 @@
+<template>
+	<require from="../resources/elements/post-form"></require>
+  <h1>Edit Post</h1>
+	<div class="alert alert-danger" role="alert" if.bind="error">
+	  ${ error }
+	</div>
+	<post-form submit.delegate="update()" post.bind="post" button.bind="buttonText"></post-form>
+</template>

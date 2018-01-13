@@ -1,0 +1,8 @@
+<template>
+  <require from="../resources/elements/post-view"></require>
+	<h4 class="blog-post-meta">Viewing all posts tagged <span class="badge badge-secondary">${ tag }</span></h4>
+  <div repeat.for="post of posts">
+    <post-view post.bind="post"></post-view>
+    <hr />
+  </div>
+</template>

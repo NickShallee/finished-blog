@@ -1,3 +1,80 @@
 <template>
-  <h1>${message}</h1>
+	<require from="bootstrap/css/bootstrap.css"></require>
+	<require from="./assets/styles/blog.css"></require>
+  <header>
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="nav">
+          <a class="nav-link ${ router.currentInstruction.config.name === 'home' ? 'active' : '' }" route-href="home">
+            Home
+          </a>
+          <a class="nav-link ${ router.currentInstruction.config.name === 'login' ? 'active' : '' }" route-href="login" if.bind="!currentUser">Log in</a>
+          <a class="nav-link ${ router.currentInstruction.config.name === 'signup' ? 'active' : '' }" route-href="signup" if.bind="!currentUser">Sign up</a>
+          <a class="nav-link ${ router.currentInstruction.config.name === 'newpost' ? 'active' : '' }" route-href="newpost" if.bind="currentUser">New Post</a>
+          <a class="nav-link" href="#" if.bind="currentUser" click.delegate="logout()">Log out</a>
+        </nav>
+      </div>
+    </div>
+
+    <div class="blog-header">
+      <div class="container">
+        <h1 class="blog-title">The Bootstrap Blog</h1>
+        <p class="lead blog-description">An example blog template built with Bootstrap.</p>
+      </div>
+    </div>
+  </header>
+
+  <main role="main" class="container">
+
+    <div class="row">
+
+      <div class="col-sm-8 blog-main">
+        <router-view></router-view>
+      </div><!-- /.blog-main -->
+
+      <aside class="col-sm-3 ml-sm-auto blog-sidebar">
+        <p if.bind="currentUser">Welcome, ${ currentUser }</p>
+        <div class="sidebar-module sidebar-module-inset">
+          <h4>Tags</h4>
+            <a repeat.for="tag of tags" route-href="route: tag-view; params.bind: { tag: tag }">
+              <span class="badge badge-pill badge-info">${ tag }</span>
+            </a>
+        </div>
+        <div class="sidebar-module">
+          <h4>Archives</h4>
+          <ol class="list-unstyled">
+            <li><a href="#">March 2014</a></li>
+            <li><a href="#">February 2014</a></li>
+            <li><a href="#">January 2014</a></li>
+            <li><a href="#">December 2013</a></li>
+            <li><a href="#">November 2013</a></li>
+            <li><a href="#">October 2013</a></li>
+            <li><a href="#">September 2013</a></li>
+            <li><a href="#">August 2013</a></li>
+            <li><a href="#">July 2013</a></li>
+            <li><a href="#">June 2013</a></li>
+            <li><a href="#">May 2013</a></li>
+            <li><a href="#">April 2013</a></li>
+          </ol>
+        </div>
+        <div class="sidebar-module">
+          <h4>Elsewhere</h4>
+          <ol class="list-unstyled">
+            <li><a href="#">GitHub</a></li>
+            <li><a href="#">Twitter</a></li>
+            <li><a href="#">Facebook</a></li>
+          </ol>
+        </div>
+      </aside><!-- /.blog-sidebar -->
+
+    </div><!-- /.row -->
+
+  </main><!-- /.container -->
+
+  <footer class="blog-footer">
+    <p>Blog template built for <a href="https://getbootstrap.com/">Bootstrap</a> by <a href="https://twitter.com/mdo">@mdo</a>.</p>
+    <p>
+      <a href="#">Back to top</a>
+    </p>
+  </footer>
 </template>
