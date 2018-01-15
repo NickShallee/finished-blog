@@ -1,17 +1,15 @@
 import {bindable, inject} from 'aurelia-framework';
+import {ValidationControllerFactory, ValidationRules} from 'aurelia-validation';
 import {PostService} from '../../common/services/post-service';
 
-@inject(PostService)
+@inject(ValidationControllerFactory, PostService)
 export class PostForm {
   @bindable post;
   @bindable button;
 
-  valueChanged(newValue, oldValue) {
-
-  }
-
-  constructor(PostService) {
-  	this.postService = PostService;
+  constructor(ValidationControllerFactory, PostService) {
+  	this.controller = ValidationControllerFactory.createForCurrentScope();
+    this.postService = PostService;
   }
 
   bind() {
@@ -22,6 +20,7 @@ export class PostForm {
   			this.allTags = data.tags;
   		}
   	});
+    this.addValidationRules();
   }
 
 	addTag() {
@@ -30,7 +29,21 @@ export class PostForm {
 		this.newTag = '';
 	}
 
-	submit() {}
+	submit() {
+  }
+
+  postChanged(newValue, oldValue) {
+    this.addValidationRules();
+  }
+
+  addValidationRules() {
+    if (this.post) {
+      ValidationRules
+        .ensure('title').required()
+        .ensure('body').required()
+        .on(this.post);    
+      this.controller.validate();
+    }
+  }
 
 }
-

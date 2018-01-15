@@ -10,7 +10,11 @@ export class Index {
 
   bind() {
   	this.postService.allPostPreviews().then(data => {
-  		this.posts = data.posts;
+  		if (data.error) {
+  			this.error = data.error;
+  		} else {
+	  		this.posts = data.posts;
+  		}
   	});
   }
 

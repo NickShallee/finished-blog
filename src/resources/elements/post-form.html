@@ -1,12 +1,12 @@
 <template>
-	<form submit.delegate="submit()">
+	<form submit.delegate="submit()" input.delegate="controller.validate()">
 	  <div class="form-group">
 	    <label for="title">Title</label>
-	    <input type="text" class="form-control" id="title" placeholder="Your post title" value.bind="post.title">
+	    <input type="text" class="form-control" id="title" placeholder="Your post title" value.bind="post.title & validate">
 	  </div>
 	  <div class="form-group">
 	    <label for="body">Body</label>
-	    <textarea class="form-control" id="body" rows="10" value.bind="post.body"></textarea>
+	    <textarea class="form-control" id="body" rows="10" value.bind="post.body & validate"></textarea>
 	  </div>
 	  <div class="form-group">
 	    <label for="tags">Tags</label>
@@ -20,6 +20,14 @@
 	  <input type="text" value.bind="newTag" placeholder="New Tag"/>
 	  <a href="#" class="btn btn-sm btn-dark" click.delegate="addTag()">Add Tag</a>
 		<hr />
-	  <button type="submit" class="btn btn-primary">${ button }</button>
+
+		<div class="alert alert-info" role="alert" if.bind="controller.errors.length > 0">
+		  Please resolve the following issues prior to submitting your post:
+		  <ul>
+		  	<li repeat.for="error of controller.errors">${ error.message }</li>
+		  </ul>
+		</div>
+
+	  <button type="submit" class="btn btn-primary" disabled.bind="controller.errors.length > 0">${ button }</button>
 	</form>
 </template>

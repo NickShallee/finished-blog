@@ -18,7 +18,7 @@ export class Edit {
   activate(params) {
   	let slug = params.slug;
   	this.postService.find(slug).then(data => {
-  		if (data. error) {
+  		if (data.error) {
   			this.error = data.error;
   		} else {
         if (data.post.author !== this.authService.currentUser) {

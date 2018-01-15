@@ -17,7 +17,7 @@ export class PostService {
 					author: 'Nick Shallee',
 					slug: 'my-first-post',
 					tags: ['aurelia', 'lorem', 'javascript'],
-					createdAt: new Date()
+					createdAt: new Date('July 1, 2017')
 				},
 				{
 					title: 'My second post',
@@ -25,7 +25,7 @@ export class PostService {
 					author: 'Jane Doe',
 					slug: 'my-second-post',
 					tags: ['javascript', 'learning'],
-					createdAt: new Date()
+					createdAt: new Date('August 17, 2017')
 				},
 				{
 					title: 'My third post',
@@ -33,7 +33,7 @@ export class PostService {
 					author: 'Nick Shallee',
 					slug: 'my-third-post',
 					tags: ['kafka'],
-					createdAt: new Date()
+					createdAt: new Date('December 1, 2017')
 				}
 			]
 		}
@@ -43,7 +43,7 @@ export class PostService {
 		return new Promise((resolve, reject) => {
 		  setTimeout(() => {
 		  	if (this.posts) {
-			  	resolve({ posts: this.posts.reverse().map(post => {
+		  		let previews = this.posts.map(post => {
 			  		return {
 			  			title: post.title,
 			  			body: post.body.substring(0,200) + '...',
@@ -52,24 +52,32 @@ export class PostService {
 			  			tags: post.tags,
 			  			createdAt: post.createdAt
 			  		}
-			  	} ) });
+			  	});
+			  	previews.sort((a,b) => b.createdAt - a.createdAt);
+			  	resolve({ posts: previews });
 		  	} else {
-		  		resolve({ posts: [] });
+		  		resolve({ error: 'There was an error retrieving the posts.' });
 		  	}
 		  }, this.delay);
 		});		
 	}
 
-	allPosts() {
+	allArchives() {
+		let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 		return new Promise((resolve, reject) => {
 		  setTimeout(() => {
-		  	if (this.posts) {
-			  	resolve({ posts: this.posts.reverse() });
+		  	let archives = [];
+		  	this.posts.sort((a,b) => b.createdAt - a.createdAt);
+		  	this.posts.forEach(post => {
+		  		archives.push(`${months[post.createdAt.getMonth()]} ${post.createdAt.getFullYear()}`);
+		  	});
+		  	if (archives) {	
+			  	resolve({ archives: archives.filter((v, i, a) => a.indexOf(v) === i) });		  		
 		  	} else {
-		  		resolve({ posts: [] });
+		  		resolve({ error: 'There was an error retrieving the archives.' });
 		  	}
 		  }, this.delay);
-		});
+		});		
 	}
 
 	allTags() {
@@ -79,7 +87,11 @@ export class PostService {
 		  	this.posts.forEach(post => {
 		  		tags = tags.concat(post.tags);
 		  	});
-		  	resolve({ tags: tags.filter((v, i, a) => a.indexOf(v) === i) });
+		  	if (tags) {	
+			  	resolve({ tags: tags.filter((v, i, a) => a.indexOf(v) === i) });		  		
+		  	} else {
+		  		resolve({ error: 'There was an error retrieving the tags.' });
+		  	}
 		  }, this.delay);
 		});		
 	}
@@ -109,7 +121,7 @@ export class PostService {
 	find(slug) {
 		return new Promise((resolve, reject) => {
 		  setTimeout(() => {
-		  	let post = this.posts.reverse().find(post => post.slug.toLowerCase() === slug.toLowerCase());
+		  	let post = this.posts.sort((a,b) => b.createdAt - a.createdAt).find(post => post.slug.toLowerCase() === slug.toLowerCase());
 		  	if (post) {
 			  	resolve({ post });
 		  	} else {
@@ -119,10 +131,29 @@ export class PostService {
 		});	
 	}
 
-	postsByTag(tag) {
+	postsByTag(tag) {		
 		return new Promise((resolve, reject) => {
 		  setTimeout(() => {
-		  	resolve({ posts: this.posts.reverse().filter(post => post.tags.includes(tag.toLowerCase())) });
+		  	if (!this.posts) {
+		  		resolve({ error: 'Error finding posts.' });
+		  	} else {
+			  	resolve({ posts: this.posts.filter(post => post.tags.includes(tag)).sort((a,b) => b.createdAt - a.createdAt) });
+		  	}
+		  }, this.delay);
+		});			
+	}
+
+	postsByArchive(archive) {
+		let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+		return new Promise((resolve, reject) => {
+		  setTimeout(() => {
+		  	if (!this.posts) {
+		  		resolve({ error: 'Error finding posts.' });
+		  	} else {
+			  	resolve({ posts: this.posts.filter(post => {
+			  		return archive === `${months[post.createdAt.getMonth()]} ${post.createdAt.getFullYear()}`;
+			  	}).sort((a,b) => b.createdAt - a.createdAt) });
+		  	}
 		  }, this.delay);
 		});			
 	}
