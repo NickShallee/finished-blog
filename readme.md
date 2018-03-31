@@ -4,7 +4,7 @@ This repository represents the end-state of the blog created in the [Aurelia JS 
 
 ## Getting Started
 
-I would recommend getting started by following along with the [videocasts](https://www.youtube.com/playlist?list=PLxo86ctKorEiEItOZpbjZi9LSboZ0qFt9); however, if you would prefer to just check out the completed blog, the folling sections will instruct you on how to clone down the repository, install dependencies, and build/serve the application.
+I would recommend getting started by following along with the [videocasts](https://www.youtube.com/playlist?list=PLxo86ctKorEiEItOZpbjZi9LSboZ0qFt9); however, if you would prefer to just check out the completed blog, the following sections will instruct you on how to clone down the repository, install dependencies, and build/serve the application.
 
 ### Prerequisites
 
