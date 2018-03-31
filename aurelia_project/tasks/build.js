@@ -2,6 +2,7 @@ import gulp from 'gulp';
 import {CLIOptions, build as buildCLI} from 'aurelia-cli';
 import transpile from './transpile';
 import processMarkup from './process-markup';
+import processLocales from './process-locales';
 import processCSS from './process-css';
 import copyFiles from './copy-files';
 import watch from './watch';
@@ -12,6 +13,7 @@ let build = gulp.series(
   gulp.parallel(
     transpile,
     processMarkup,
+    processLocales,
     processCSS,
     copyFiles
   ),

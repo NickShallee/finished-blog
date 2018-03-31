@@ -1,49 +1,68 @@
-import {bindable, inject} from 'aurelia-framework';
-import {ValidationControllerFactory, ValidationRules} from 'aurelia-validation';
+import {inject} from 'aurelia-framework';
+import {bindable} from 'aurelia-framework';
+import {EventAggregator} from 'aurelia-event-aggregator';
+import {I18N} from 'aurelia-i18n';
+import {ValidationRules, ValidationControllerFactory, validationMessages} from 'aurelia-validation';
 import {PostService} from '../../common/services/post-service';
 
-@inject(ValidationControllerFactory, PostService)
+@inject(EventAggregator, I18N, ValidationControllerFactory, PostService)
 export class PostForm {
   @bindable post;
-  @bindable button;
+  @bindable title;
 
-  constructor(ValidationControllerFactory, PostService) {
-  	this.controller = ValidationControllerFactory.createForCurrentScope();
+  constructor(EventAggregator, I18N, ValidationControllerFactory, PostService) {
+  	this.ea = EventAggregator;
+    this.i18n = I18N;
+    this.controller = ValidationControllerFactory.createForCurrentScope();
     this.postService = PostService;
+    this.localeSubscription = this.ea.subscribe('locale-changed', updatedAt => {
+      this.setValidation();
+    })
   }
 
-  bind() {
-  	this.postService.allTags().then(data => {
-  		if (data.error) {
-  			this.error = data.error;
-  		} else {
-  			this.allTags = data.tags;
-  		}
-  	});
-    this.addValidationRules();
+  attached() {
+    this.postService.allTags().then(data => {
+      this.allTags = data.tags;
+    }).catch(error => {
+      this.ea.publish('toast', {
+        type: 'error',
+        message: error.message
+      });
+    });  	
   }
 
-	addTag() {
-		this.allTags.push(this.newTag);
-		this.post.tags.push(this.newTag);
-		this.newTag = '';
-	}
+  detatched() {
+    this.localeSubscription.dispose();
+  }
 
-	submit() {
+  addTag() {
+    this.allTags.push(this.newTag);
+    this.post.tags.push(this.newTag);
+    this.newTag = '';
+  }
+
+  submit() {
+
   }
 
   postChanged(newValue, oldValue) {
-    this.addValidationRules();
+    this.setValidation();
   }
 
-  addValidationRules() {
-    if (this.post) {
+  setValidation() {
+    if(this.post) {
+      validationMessages['required'] = this.i18n.tr('post-form:requiredField');
+
       ValidationRules
-        .ensure('title').required()
-        .ensure('body').required()
-        .on(this.post);    
+        .ensure('title').displayName(this.i18n.tr('post-form:title'))
+          .required()
+          .minLength(5)
+        .ensure('body').displayName(this.i18n.tr('post-form:body')).required()
+        .on(this.post);
+
       this.controller.validate();
-    }
+    }    
   }
 
 }
+

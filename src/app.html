@@ -1,25 +1,34 @@
 <template>
 	<require from="bootstrap/css/bootstrap.css"></require>
+  <require from="toastr/build/toastr.min.css"></require>
 	<require from="./assets/styles/blog.css"></require>
   <header>
     <div class="blog-masthead">
       <div class="container">
         <nav class="nav">
-          <a class="nav-link ${ router.currentInstruction.config.name === 'home' ? 'active' : '' }" route-href="home">
+          <a class="nav-link ${ router.currentInstruction.config.name === 'home' ? 'active' : '' }" href="#" t="nav:home">
             Home
           </a>
-          <a class="nav-link ${ router.currentInstruction.config.name === 'login' ? 'active' : '' }" route-href="login" if.bind="!currentUser">Log in</a>
-          <a class="nav-link ${ router.currentInstruction.config.name === 'signup' ? 'active' : '' }" route-href="signup" if.bind="!currentUser">Sign up</a>
-          <a class="nav-link ${ router.currentInstruction.config.name === 'newpost' ? 'active' : '' }" route-href="newpost" if.bind="currentUser">New Post</a>
-          <a class="nav-link" href="#" if.bind="currentUser" click.delegate="logout()">Log out</a>
+          <a class="nav-link ${ router.currentInstruction.config.name === 'login' ? 'active' : '' }" route-href="login" if.bind="!currentUser" t="nav:login">
+            Log In
+          </a>
+          <a class="nav-link ${ router.currentInstruction.config.name === 'signup' ? 'active' : '' }" route-href="signup" if.bind="!currentUser" t="nav:signup">
+            Sign Up
+          </a>
+          <a class="nav-link ${ router.currentInstruction.config.name === 'create-post' ? 'active' : '' }" route-href="create-post" if.bind="currentUser" t="nav:newpost">
+            New Post
+          </a>
+          <a class="nav-link" href="#" if.bind="currentUser" click.delegate="logout()" t="nav:logout">
+            Log Out
+          </a>
         </nav>
       </div>
     </div>
 
     <div class="blog-header">
       <div class="container">
-        <h1 class="blog-title">Nick's Blog</h1>
-        <p class="lead blog-description">We're starting to get pretty good at Aurelia!</p>
+        <h1 class="blog-title">The Bootstrap Blog</h1>
+        <p class="lead blog-description">An example blog template built with Bootstrap.</p>
       </div>
     </div>
   </header>
@@ -29,32 +38,34 @@
     <div class="row">
 
       <div class="col-sm-8 blog-main">
-        <div class="alert alert-danger" role="alert" if.bind="error">
-          ${ error }
-        </div>
-        <router-view></router-view>
+
+ 			  <router-view></router-view>
+
       </div><!-- /.blog-main -->
 
       <aside class="col-sm-3 ml-sm-auto blog-sidebar">
-        <p if.bind="currentUser">Welcome, ${ currentUser }</p>
+
+        <p>Welcome, ${ currentUser || 'Guest' }</p>
+
         <div class="sidebar-module sidebar-module-inset">
           <h4>Tags</h4>
-            <a repeat.for="tag of tags" route-href="route: tag-view; params.bind: { tag }">
-              <span class="badge badge-pill badge-info">${ tag }</span>
-            </a>
+          <a route-href="route: tag-view; params.bind: { tag }" repeat.for="tag of tags">
+            <span class="badge badge-pill badge-info">${ tag }</span>
+          </a>
         </div>
         <div class="sidebar-module">
           <h4>Archives</h4>
           <ol class="list-unstyled">
-            <li repeat.for="archive of archives"><a route-href="route: archive-view; params.bind: { archive }">${ archive }</a></li>
+            <li repeat.for="archive of archives">
+              <a route-href="route: archive-view; params.bind: { archive }">${ archive }</a>
+            </li>
           </ol>
         </div>
         <div class="sidebar-module">
-          <h4>Elsewhere</h4>
+          <h4>Language</h4>
           <ol class="list-unstyled">
-            <li><a href="#">GitHub</a></li>
-            <li><a href="#">Twitter</a></li>
-            <li><a href="#">Facebook</a></li>
+            <li><a href="#" click.delegate="setLocale('en-ca')">English</a></li>
+            <li><a href="#" click.delegate="setLocale('fr')">français</a></li>
           </ol>
         </div>
       </aside><!-- /.blog-sidebar -->
@@ -69,4 +80,6 @@
       <a href="#">Back to top</a>
     </p>
   </footer>
+
+
 </template>

@@ -4,40 +4,47 @@ import {Router} from 'aurelia-router';
 import {PostService} from '../common/services/post-service';
 import {AuthService} from '../common/services/auth-service';
 
-@inject(EventAggregator, Router, AuthService, PostService)
+@inject (EventAggregator, Router, AuthService, PostService)
 export class Edit {     
 
   constructor(EventAggregator, Router, AuthService, PostService) {
-  	this.eventAggregator = EventAggregator;
-  	this.router = Router;
+  	this.ea = EventAggregator;
+    this.router = Router;
     this.authService = AuthService;
     this.postService = PostService;
-  	this.buttonText = 'Update Post';
   }
 
   activate(params) {
-  	let slug = params.slug;
-  	this.postService.find(slug).then(data => {
-  		if (data.error) {
-  			this.error = data.error;
-  		} else {
-        if (data.post.author !== this.authService.currentUser) {
-          this.router.navigateToRoute('home');
-        }
-  			this.post = data.post;
-  		}
-  	});
+    this.postService.find(params.slug).then(data => {
+      // First check authorship
+      if (data.post.author !== this.authService.currentUser) {
+        this.router.navigateToRoute('home');
+      }
+    	this.post = data.post;
+    }).catch(error => {
+      this.ea.publish('toast', {
+        type: 'error',
+        message: 'Post not found.'
+      });
+      this.router.navigateToRoute('home');
+    });
+    this.title = 'editPost';
   }
 
-  update() {
+  editPost() {
   	this.postService.update(this.post).then(data => {
-  		if (data.error) {
-  			this.error = data.error;
-  		} else {
-  			this.eventAggregator.publish('post-updated', new Date());
-  			this.router.navigateToRoute('post-view', {slug: data.slug});
-  		}
-  	})
+      this.ea.publish('post-updated', Date());
+      this.ea.publish('toast', {
+        type: 'success',
+        message: 'Post edited!'
+      });
+  		this.router.navigateToRoute('post-view', {slug: data.slug});
+  	}).catch(error => {
+      this.ea.publish('toast', {
+        type: 'error',
+        message: error.message
+      });
+  	});
   }
 
 }

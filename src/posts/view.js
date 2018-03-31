@@ -1,26 +1,29 @@
 import {inject} from 'aurelia-framework';
+import {EventAggregator} from 'aurelia-event-aggregator';
+import {Router} from 'aurelia-router';
 import {AuthService} from '../common/services/auth-service';
 import {PostService} from '../common/services/post-service';
 
-@inject (AuthService, PostService)
+@inject (EventAggregator, Router, AuthService, PostService)
 export class View {     
-  
-  constructor(AuthService, PostService) {
+
+  constructor(EventAggregator, Router, AuthService, PostService) {
+    this.ea = EventAggregator;
+    this.router = Router;
     this.authService = AuthService;
-  	this.postService = PostService;
+    this.postService = PostService;
   }
 
   activate(params) {
-    this.currentUser = this.authService.currentUser;
-  	this.post = false;
-  	let slug = params.slug;
-  	this.postService.find(slug).then(data => {
-  		if (data.error) {
-  			this.error = data.error;
-  		} else {
-  			this.post = data.post;
-  		}
-  	});
+  	this.postService.find(params.slug).then(data => {
+  	 this.post = data.post;
+  	}).catch(error => {
+      this.ea.publish('toast', {
+        type: 'error',
+        message: error.message
+      });
+      this.router.navigateToRoute('home');
+    });
   }
 
 }

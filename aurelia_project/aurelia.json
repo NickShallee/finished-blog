@@ -1,5 +1,5 @@
 {
-  "name": "blog-starter",
+  "name": "blog-start",
   "type": "project:application",
   "bundler": {
     "id": "cli",
@@ -24,7 +24,7 @@
         "name": "app-bundle.js",
         "source": [
           "[**/*.js]",
-          "**/*.{css,html}"
+          "**/*.{css,html,json}"
         ]
       },
       {
@@ -47,9 +47,13 @@
             "name": "bootstrap",
             "path": "../node_modules/bootstrap/dist",
             "main": "js/bootstrap.bundle",
-            "deps": ["jquery"],
+            "deps": [
+              "jquery"
+            ],
             "exports": "$",
-            "resources": ["css/bootstrap.css"]
+            "resources": [
+              "css/bootstrap.css"
+            ]
           },
           "aurelia-binding",
           "aurelia-bootstrapper",
@@ -88,12 +92,47 @@
             "main": "aurelia-testing",
             "env": "dev"
           },
+          "text",
+          {
+            "name": "moment",
+            "main": "./moment.js",
+            "path": "../node_modules/moment",
+            "resources": []
+          },
           {
             "name": "aurelia-validation",
+            "main": "aurelia-validation",
             "path": "../node_modules/aurelia-validation/dist/amd",
-            "main": "aurelia-validation"
+            "resources": []
           },
-          "text"
+          {
+            "name": "toastr",
+            "main": "toastr.js",
+            "path": "../node_modules/toastr",
+            "resources": [
+              "build/toastr.min.css"
+            ],
+            "deps": [
+              "jquery"
+            ]
+          },
+          {
+            "name": "aurelia-i18n",
+            "main": "aurelia-i18n",
+            "path": "../node_modules/aurelia-i18n/dist/amd",
+            "resources": []
+          },
+          {
+            "name": "i18next",
+            "main": "i18next",
+            "path": "../node_modules/i18next/dist/umd",
+            "resources": []
+          },
+          {
+            "name": "i18next-xhr-backend",
+            "path": "../node_modules/i18next-xhr-backend/dist/umd",
+            "main": "i18nextXHRBackend"
+          }          
         ]
       }
     ],
@@ -106,9 +145,10 @@
           "name": "text",
           "extensions": [
             ".html",
-            ".css"
+            ".css",
+            ".json"
           ],
-          "stub": true
+          "stub": false
         }
       ]
     }
@@ -132,10 +172,16 @@
     "source": "src/**/*.js"
   },
   "markupProcessor": {
-    "id": "minimum",
-    "displayName": "Minimal Minification",
+    "id": "none",
+    "displayName": "None",
     "fileExtension": ".html",
     "source": "src/**/*.html"
+  },
+  "localesProcessor": {
+    "id": "none",
+    "displayName": "None",
+    "fileExtension": ".json",
+    "source": "src/locales/**/*.json"
   },
   "cssProcessor": {
     "id": "none",
@@ -144,13 +190,12 @@
     "source": "src/**/*.css"
   },
   "editor": {
-    "id": "vscode",
-    "displayName": "Visual Studio Code"
+    "id": "sublime",
+    "displayName": "Sublime"
   },
   "unitTestRunner": {
-    "id": "karma",
-    "displayName": "Karma",
-    "source": "test/unit/**/*.js"
+    "id": "none",
+    "displayName": "None"
   },
   "paths": {
     "root": "src",
@@ -159,9 +204,5 @@
     "attributes": "resources/attributes",
     "valueConverters": "resources/value-converters",
     "bindingBehaviors": "resources/binding-behaviors"
-  },
-  "testFramework": {
-    "id": "jasmine",
-    "displayName": "Jasmine"
   }
 }

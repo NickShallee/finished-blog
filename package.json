@@ -1,5 +1,5 @@
 {
-  "name": "blog-starter",
+  "name": "blog-start",
   "description": "An Aurelia client application.",
   "version": "0.1.0",
   "repository": {
@@ -10,12 +10,17 @@
   "dependencies": {
     "aurelia-animator-css": "^1.0.2",
     "aurelia-bootstrapper": "^2.1.1",
+    "aurelia-i18n": "^2.1.2",
     "aurelia-validation": "^1.1.2",
     "bluebird": "^3.4.1",
     "bootstrap": "^4.0.0-beta.3",
+    "i18next": "^10.5.0",
+    "i18next-xhr-backend": "^1.5.1",
     "jquery": "^3.2.1",
+    "moment": "^2.21.0",
     "requirejs": "^2.3.2",
-    "text": "github:requirejs/text#latest"
+    "text": "github:requirejs/text#latest",
+    "toastr": "^2.1.4"
   },
   "peerDependencies": {},
   "devDependencies": {
@@ -39,14 +44,6 @@
     "babel-register": "^6.24.0",
     "gulp-babel": "^6.1.2",
     "gulp-eslint": "^2.0.0",
-    "gulp-htmlmin": "^3.0.0",
-    "html-minifier": "^3.2.3",
-    "jasmine-core": "^2.4.1",
-    "karma": "^0.13.22",
-    "karma-chrome-launcher": "^2.2.0",
-    "karma-jasmine": "^1.0.2",
-    "karma-sourcemap-loader": "^0.3.7",
-    "karma-babel-preprocessor": "^6.0.1",
     "browser-sync": "^2.13.0",
     "connect-history-api-fallback": "^1.2.0",
     "debounce": "^1.0.2",

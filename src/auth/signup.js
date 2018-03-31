@@ -1,26 +1,26 @@
 import {inject} from 'aurelia-framework';
-import {EventAggregator} from 'aurelia-event-aggregator';
 import {Router} from 'aurelia-router';
+import {EventAggregator} from 'aurelia-event-aggregator';
 import {AuthService} from '../common/services/auth-service';
 
-@inject(EventAggregator, Router, AuthService)
+@inject (Router, EventAggregator, AuthService)
 export class Signup {     
-
-  constructor(EventAggregator, Router, AuthService) {
-  	this.eventAggregator = EventAggregator;
+  
+  constructor(Router, EventAggregator, AuthService) {
   	this.router = Router;
+  	this.ea = EventAggregator;
   	this.authService = AuthService;
   }
 
   signup() {
   	this.authService.signup(this.name).then(data => {
-  		if (data.error) {
-  			this.error = data.error;
-  		} else {
-  			this.error = null;
-	  		this.eventAggregator.publish('auth-updated', new Date());
-	  		this.router.navigateToRoute('home');  			
-  		}
+  		this.ea.publish('user', data.name);
+  		this.router.navigateToRoute('home');
+  	}).catch(error => {
+      this.ea.publish('toast', {
+        type: 'error',
+        message: error.message
+      });
   	});
   }
 
